@@ -445,7 +445,7 @@ imagenet_templates_small = [
     "a cropped photo of the {}",
     "the photo of a {}",
     "a photo of a clean {}",
-    "a photo of a dirty {}",
+    # "a photo of a dirty {}",
     "a dark photo of the {}",
     "a photo of my {}",
     "a photo of the cool {}",
@@ -461,12 +461,12 @@ imagenet_templates_small = [
     "a rendition of a {}",
     "a photo of a nice {}",
     "a good photo of a {}",
-    "a photo of the nice {}",
-    "a photo of the small {}",
-    "a photo of the weird {}",
-    "a photo of the large {}",
-    "a photo of a cool {}",
-    "a photo of a small {}",
+    # "a photo of the nice {}",
+    # "a photo of the small {}",
+    # "a photo of the weird {}",
+    # "a photo of the large {}",
+    # "a photo of a cool {}",
+    # "a photo of a small {}",
 ]
 
 imagenet_style_templates_small = [

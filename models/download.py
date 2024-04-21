@@ -8,7 +8,10 @@ from huggingface_hub import snapshot_download
 # model = "runwayml/stable-diffusion-v1-5"
 
 # https://huggingface.co/OFA-Sys/small-stable-diffusion-v0/tree/main
-model = "OFA-Sys/small-stable-diffusion-v0"
+# model = "OFA-Sys/small-stable-diffusion-v0"
+
+# https://huggingface.co/segmind/portrait-finetuned/tree/main?library=true
+model = "segmind/portrait-finetuned"
 
 
 snapshot_download(repo_id=model,
