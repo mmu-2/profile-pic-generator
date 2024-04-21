@@ -20,6 +20,29 @@ Weirdly enough, batch_size is changing runtime by a lot:
 - 16 - 5 hours
 - 24 - 7.5 hours.
 
+If using base aws linux, nothing will be installed and you should do the following:
+1. sudo yum install python -y
+2. sudo yum install pip -y
+3. sudo yum install git -y
+4. git clone https://github.com/mmu-2/profile-pic-generator.git
+5. pip install virtualenv
+6. cd ~
+6. virtualenv pytorch
+7. source ~/pytorch/bin/activate
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/install-nvidia-driver.html#nvidia-gaming-driver
+8. sudo yum install gcc make -y
+9. sudo yum update -y
+10. sudo reboot
+11. sudo yum install -y gcc kernel-devel-$(uname -r)
+12. 1. Get key from: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+12. 2. aws configure list
+12. 3. region: us-east-2
+12. 4. default output format: [Enter]
+12. aws s3 cp --recursive s3://nvidia-gaming/linux/latest/ .
+13. unzip latest-driver-name.zip -d nvidia-drivers
+14. chmod +x nvidia-drivers/550.73-Apr2024-Cloud_Gaming-Linux-Guest-Drivers/NVIDIA-Linux-x86_64*-grid.run
+15. sudo ./nvidia-drivers/550.73-Apr2024-Cloud_Gaming-Linux-Guest-Drivers/NVIDIA-Linux-x86_64*.run
 
 1. Setup environment. See requirements.txt for packages.
 2. In models, download the file you need in download.py, else you need to modify filepath in training.
@@ -27,16 +50,16 @@ Weirdly enough, batch_size is changing runtime by a lot:
 
 ## Run
 
-python train.py  --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/cat_toy_example" --placeholder_token  "<mu*>" --initializer_token "toy" --learnable_property "object" --mixed_precision fp16 --enable_xformers_memory_efficient_attention
+python train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/cat_toy_example" --placeholder_token "<mu*>" --initializer_token "toy" --learnable_property "object" --mixed_precision fp16 --enable_xformers_memory_efficient_attention
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/cat_toy_example" --placeholder_token  "<mu*>" --initializer_token "toy" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/cat_toy_example" --placeholder_token "<mu*>" --initializer_token "toy" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8
 
 ## Experiment 1
 
 I got the baseline working with example cat toy example. Now, I want to see how it works with me.
 Current experiment: Number of training iterations
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8
 
 python test.py
 
@@ -47,7 +70,7 @@ Result: Really bad looking humans
 The output of the previous experiment is worse than just a descriptive prompt. This tells me that something has gone severely wrong.
 To remedy this, I did several things: crop the images to focus more on me and reduce the number of duplicated training data samples for training.
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50
 
 python test.py
 
@@ -56,7 +79,7 @@ python test.py
 4/19/24a
 The experiments are not turning out too well for human outputs, so I am switching models to https://huggingface.co/segmind/portrait-finetuned
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50
 
 python test.py
 
@@ -67,7 +90,7 @@ I also switched test.py to have more specific prompts. The results are better, b
 ## Experiment 4
 more specific prompts and detailed prompts and try multiple vectors
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 2
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 2
 
 python test.py
 
@@ -76,7 +99,7 @@ Result: No improvement on 3.
 ## Experiment 5
 More vectors
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/me" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
 
 python test.py
 
@@ -106,7 +129,7 @@ Result: No real change.
 ## Experiment 9
 Cropped to just my face.
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
 
 python test.py
 
@@ -114,7 +137,7 @@ Result: Somewhat improved.
 
 ## Experiment 9
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 50 --num_vectors 8
 
 python test.py
 
@@ -123,14 +146,14 @@ Result: Some improvement.
 ## Experiment 10
 4 data samples, reduced repeats.
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 25 --num_vectors 8
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 4 --repeats 25 --num_vectors 8
 
 python test.py
 
 ## Experiment 11
 4 data samples, reduced repeats.
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8 --repeats 25 --num_vectors 16
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 8 --repeats 25 --num_vectors 16
 
 python test.py
 
@@ -138,39 +161,28 @@ python test.py
 ## Experiment 12
 Batch size 2
 
-accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token  "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 2 --repeats 25 --num_vectors 16
+accelerate launch train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/my_portrait" --placeholder_token "<mu*>" --initializer_token "person" --learnable_property "object" --mixed_precision "fp16" --enable_xformers_memory_efficient_attention --train_batch_size 2 --repeats 25 --num_vectors 16
 
 python test.py
 
 ## Experiment 13
 Switch to dreambooth. Note this does not do prior preservation, which should be okay for this use case.
 
-accelerate launch train_dreambooth.py --pretrained_model_name_or_path "../models/" --instance_data_dir "../datasets/my_portrait" --output_dir="dreambooth-model" --instance_prompt="a photo of mu person" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=2 --gradient_checkpointing --use_8bit_adam --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=800 --mixed_precision "fp16"
+This one definitely works
 
-accelerate launch train_dreambooth.py --pretrained_model_name_or_path "../models/" --instance_data_dir "../datasets/my_portrait" --output_dir="dreambooth-model" --instance_prompt="a photo of mu person" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=800 --mixed_precision "fp16"
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "CompVis/stable-diffusion-v1-4" --instance_data_dir "../datasets/my_portrait" --output_dir="dreambooth-model" --instance_prompt="a photo of mu person" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=800 --mixed_precision "fp16" --use_8bit_adam
 
-accelerate launch train_dreambooth.py --pretrained_model_name_or_path "CompVis/stable-diffusion-v1-4" --instance_data_dir "../datasets/my_portrait" --output_dir="dreambooth-model" --instance_prompt="a photo of mu person" --resolution=512 --train_batch_size=1
+python test_dreambooth.py
 
+## Experiment 14
+Newer model.
 
-export MODEL_NAME="CompVis/stable-diffusion-v1-4"
-export INSTANCE_DIR="../datasets/my_portrait"
-export CLASS_DIR="../datasets/class"
-export OUTPUT_DIR="dreambooth-model"
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/my_portrait" --output_dir="dreambooth-model" --instance_prompt="a photo of mu person" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=1600 --mixed_precision "fp16" --use_8bit_adam
 
-  accelerate launch train_dreambooth.py \
-  --pretrained_model_name_or_path=$MODEL_NAME  \
-  --instance_data_dir=$INSTANCE_DIR \
-  --class_data_dir=$CLASS_DIR \
-  --output_dir=$OUTPUT_DIR \
-  --with_prior_preservation --prior_loss_weight=1.0 \
-  --instance_prompt="a photo of sks dog" \
-  --class_prompt="a photo of dog" \
-  --resolution=512 \
-  --train_batch_size=1 \
-  --gradient_accumulation_steps=2 --gradient_checkpointing \
-  --use_8bit_adam \
-  --learning_rate=5e-6 \
-  --lr_scheduler="constant" \
-  --lr_warmup_steps=0 \
-  --num_class_images=200 \
-  --max_train_steps=800
+python test_dreambooth.py
+
+## Experiment 15
+
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/me" --output_dir="dreambooth-model" --instance_prompt="a photo of mu* smiling and standing in a green sweater" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=5000 --mixed_precision "fp16" --use_8bit_adam
+
+python test_dreambooth.py
