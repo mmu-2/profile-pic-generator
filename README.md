@@ -181,8 +181,24 @@ accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/
 
 python test_dreambooth.py
 
+Results: Seems a little worse than 1-4 honestly.
+
 ## Experiment 15
 
-accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/me" --output_dir="dreambooth-model" --instance_prompt="a photo of mu* smiling and standing in a green sweater" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=5000 --mixed_precision "fp16" --use_8bit_adam
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/me" --output_dir="dreambooth-model" --instance_prompt="a photo of mu* smiling and standing in a green sweater" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=3000 --mixed_precision "fp16" --use_8bit_adam --checkpointing_steps 1000
+
+python test_dreambooth.py
+
+## Experiment 16
+
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/me" --output_dir="dreambooth-model" --instance_prompt="a photo of mu* smiling and standing in a green sweater" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=6000 --mixed_precision "fp16" --use_8bit_adam --checkpointing_steps 2000
+
+python test_dreambooth.py
+
+Results: Not so good.
+
+## Experiment 17
+
+accelerate launch train_dreambooth.py --pretrained_model_name_or_path "runwayml/stable-diffusion-v1-5" --instance_data_dir "../datasets/mix" --output_dir="dreambooth-model" --instance_prompt="a photo of mu* smiling and standing" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=6000 --mixed_precision "fp16" --use_8bit_adam --checkpointing_steps 2000
 
 python test_dreambooth.py

@@ -173,3 +173,5 @@ models/model_index.json
 models/README.md
 models/sample_images_compressed.jpg
 models/sample_images.jpg
+code/dreambooth-model/*
+code/text-inversion-model/*
