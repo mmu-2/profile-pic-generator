@@ -175,3 +175,6 @@ models/sample_images_compressed.jpg
 models/sample_images.jpg
 code/dreambooth-model/*
 code/text-inversion-model/*
+*.jpg
+*.png
+*.jpeg

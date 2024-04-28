@@ -9,8 +9,8 @@ model_id = "./dreambooth-model"
 # prompt = "mu* person posing in the woods"
 # prompt = "mu* at the beach"
 # prompt = "mu* facing me from a skyscraper"
-prompt = "mu* standing in front of the mona lisa"
-# prompt = "mu* on a mountain"
+# prompt = "mu* standing in front of the mona lisa"
+prompt = "mu* on a mountain"
 
 
 pipe = StableDiffusionPipeline.from_pretrained(model_id,
