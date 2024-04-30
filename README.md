@@ -45,6 +45,10 @@ https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/install-nvidia-driver.html#n
 2. In models, download the file you need in download.py, else you need to modify filepath in training.
 3. In code, run train.
 
+
+For dataset preprocessing, I have a file called main.py that I called on different datasets that could
+crop and resize. You can just toggle/call the functions you want on whatever directory dataset you want.
+
 ## Run
 
 python train.py --pretrained_model_name_or_path "../models/" --train_data_dir "../datasets/cat_toy_example" --placeholder_token "<mu*>" --initializer_token "toy" --learnable_property "object" --mixed_precision fp16 --enable_xformers_memory_efficient_attention
