@@ -46,7 +46,7 @@ https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/install-nvidia-driver.html#n
 3. In code, run train.
 
 
-For dataset preprocessing, I have a file called main.py that I called on different datasets that could
+For dataset preprocessing, I have a file called preprocessing.py that I called on different datasets that could
 crop and resize. You can just toggle/call the functions you want on whatever directory dataset you want.
 
 ## Run
